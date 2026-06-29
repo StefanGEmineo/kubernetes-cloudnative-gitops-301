@@ -3,7 +3,7 @@
 [← Página anterior](../M01-entorno-codespace-kind/M01-02-aplicacion-demo.md) · [Siguiente página →](M02-01-adaptacion-cloudnative.md)
 
 > [!NOTE]
-> **Cómo funciona este módulo.** Primero lees la **teoría y el contexto** (este README), después sigues la **demostración guiada** que hace el formador en clase, y por último practicas en los **laboratorios** M02-01 y M02-02.
+> **Cómo funciona este módulo.** Lee la **teoría y el contexto** en este README; después practica en los laboratorios M02-01 y M02-02.
 
 ## Qué aprenderás
 
@@ -141,17 +141,6 @@ Beneficios habituales:
 | Salud | Sin endpoints o uno genérico ambiguo | `/health` (liveness) + `/ready` (readiness) |
 | Imagen | Un stage, proceso root | Multistage, usuario no privilegiado |
 | Despliegue | Rebuild por cada entorno | Una imagen, N entornos con distinta config |
-
-## Demostración guiada
-
-> Recorrido que hace el formador en vivo (tono descriptivo).
-
-1. En el editor se abre `infra/app/api/api.py` y se señalan las constantes `DATABASE_URL`, `REDIS_URL` y `API_PORT` — restos del estilo M01.
-2. Se muestra la versión refactorizada: `import os` y lectura desde entorno; se explica por qué `DATABASE_URL` no tiene valor por defecto (fallar pronto si falta config).
-3. Se añade o revisa el endpoint `/ready` y, con `curl`, se contrasta respuesta 200 frente a 503 al parar Postgres con Compose.
-4. Se abre `infra/.env.example`, se copia a `.env` y se modifica `SERVICE_NAME`; tras recrear solo `demo-api`, el JSON de `/health` refleja el nuevo nombre **sin** reconstruir la lógica de negocio.
-5. En terminal se ejecuta `./scripts/image-size-compare.sh`: aparecen dos filas (legacy vs multistage). El formador comenta MB, capas y el `uid=10001` dentro del contenedor.
-6. Se cierra con la idea portable: «Esta misma imagen y los mismos nombres de variable valen en Compose hoy, en Kubernetes en el curso, o en ECS/ACA mañana — solo cambia quién rellena el entorno».
 
 ## Antes de practicar
 

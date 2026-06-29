@@ -10,7 +10,7 @@ Formación **100 % práctica**: adaptas una aplicación al modelo cloudnative, l
 2. Abre un **Codespace** desde tu fork.
 3. Sigue los módulos en orden con **← Página anterior · Siguiente página →**.
 
-Cada módulo tiene **teoría + demostración** en su README y **laboratorios** (`Mxx-NN`) donde practicas tú.
+Cada módulo tiene **teoría** en su README y **laboratorios** (`Mxx-NN`) donde practicas tú.
 
 ## Antes de empezar
 
@@ -24,7 +24,7 @@ Cada módulo tiene **teoría + demostración** en su README y **laboratorios** (
 | Documentación de referencia | [docs/](docs/README.md) |
 | Problemas frecuentes | [labs/TROUBLESHOOTING.md](labs/TROUBLESHOOTING.md) |
 
-> El bloque **Azure (AKS)** es una **demostración del instructor**. No necesitas suscripción Azure.
+> El módulo **M07 (Azure AKS)** es contenido de **referencia comparativa**. No necesitas suscripción Azure.
 
 ## Módulos
 
@@ -36,7 +36,7 @@ Cada módulo tiene **teoría + demostración** en su README y **laboratorios** (
 | M04 | Helm y Kustomize | [labs/M04-helm-kustomize/](labs/M04-helm-kustomize/README.md) |
 | M05 | CI/CD | [labs/M05-cicd/](labs/M05-cicd/README.md) |
 | M06 | GitOps con ArgoCD | [labs/M06-gitops-argocd/](labs/M06-gitops-argocd/README.md) |
-| M07 | Kubernetes en Azure (AKS) — demo | [labs/M07-kubernetes-azure-aks/](labs/M07-kubernetes-azure-aks/README.md) |
+| M07 | Kubernetes en Azure (AKS) — referencia | [labs/M07-kubernetes-azure-aks/](labs/M07-kubernetes-azure-aks/README.md) |
 | M08 | Observabilidad | [labs/M08-observabilidad/](labs/M08-observabilidad/README.md) |
 
 ## Empieza aquí

@@ -31,4 +31,4 @@ Debe permitir: `github.com`, `*.githubusercontent.com`, `ghcr.io`, `hub.docker.c
 
 ## AKS (M07)
 
-Los alumnos **no despliegan en Azure**. Si tienes dudas sobre credenciales cloud, ignora este bloque; es demo del instructor.
+El módulo M07 es **solo lectura comparativa**. No despliegas en Azure en este curso.

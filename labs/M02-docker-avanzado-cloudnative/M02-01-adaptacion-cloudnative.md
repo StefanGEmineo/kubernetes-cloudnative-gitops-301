@@ -2,7 +2,7 @@
 
 [← Página anterior](README.md) · [Siguiente página →](M02-02-optimizacion-imagenes.md)
 
-> Práctica del módulo. Lee primero el [README del módulo](README.md) (teoría, contexto y demo).
+> Práctica del módulo. Lee primero el [README del módulo](README.md) (teoría y contexto).
 
 ## Objetivo
 

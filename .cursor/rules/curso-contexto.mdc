@@ -21,7 +21,7 @@ Luego: `.agent/diseno/contexto.md`, `.agent/diseno/mapa-modulos.md` (bajo `disen
 
 - Entrega alumno: fork + **Codespaces** + repo público (sin PDF).
 - Clúster: **kind** desde M01; nombre `cloudnative-lab`.
-- **AKS (M07):** solo demo instructor; alumnos no necesitan Azure.
+- **AKS (M07):** contenido de referencia comparativa; alumnos no necesitan Azure.
 - Alumnos **no instalan** Docker/K8s/Helm en local.
 - Diseño docente (horas, ritmo, briefing) solo en `.agent/diseno/` — nunca en `labs/` ni README público.
 

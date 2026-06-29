@@ -12,11 +12,7 @@
 
 Kubernetes declara el **estado deseado**. Deployments gestionan réplicas; Services exponen tráfico; PersistentVolumeClaims guardan datos más allá del ciclo de vida del Pod.
 
-## Demostración guiada
-
-1. Despliegue inicial de la app demo en kind con Deployment + Service.
-2. Cambio de versión con rolling update y comprobación de disponibilidad.
-3. Despliegue de PostgreSQL con volumen persistente y conexión desde la app.
+En los laboratorios desplegarás la app demo en kind, aplicarás rolling updates y añadirás PostgreSQL con volumen persistente.
 
 ## Ahora practica tú
 
