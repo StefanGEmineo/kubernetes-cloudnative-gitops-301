@@ -50,13 +50,14 @@ Usas `lab-up.sh` para desplegar la stack, validas endpoints, revisas el código 
 
 ```bash
 curl -s http://127.0.0.1:8081/health | jq .
-curl -s http://127.0.0.1:8081/ready | jq .
 curl -s http://127.0.0.1:8081/work | jq .
 ```
 
+**Nota:** `/ready` no existe aún en M01 — lo añadirás en M02-01.
+
 **Por qué:** Los scripts comprueban HTTP; tú validas el **contenido JSON** que usarás en labs de observabilidad (M08).
 
-**Resultado esperado:** `"status":"ok"`, `"status":"ready"`, y `/work` con `"hits"` creciente al repetir.
+**Resultado esperado:** `"status":"ok"` en `/health`, y `/work` con `"hits"` creciente al repetir.
 
 ---
 
@@ -72,9 +73,9 @@ curl -s http://127.0.0.1:8081/work | jq .
 
 **Acción:** Abre `infra/app/api/api.py` y `infra/.env.example`.
 
-**Por qué:** En M02 trabajarás cómo la app **lee configuración del entorno** (metodología [12-Factor](../../docs/12-factor-app.md)). Familiarízate con qué variables usa (`DATABASE_URL`, `REDIS_URL`, `PORT`, …).
+**Por qué:** El código está **intencionadamente** en estado M01: URLs y puertos embebidos en constantes. En M02-01 tú externalizarás esa config (metodología [12-Factor](../../docs/12-factor-app.md)).
 
-**Resultado esperado:** Entiendes qué valores inyecta Compose vía `env_file` y cuáles lee la app con `os.environ`.
+**Resultado esperado:** Ves `DATABASE_URL = "postgres://..."` en el código y **no** existe endpoint `/ready` (404 si lo pruebas con curl).
 
 ---
 

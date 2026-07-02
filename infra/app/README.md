@@ -9,21 +9,30 @@ Stack mínima que evoluciona módulo a módulo:
 | **Compose** | `../docker-compose.yml` | Orquestación local M01–M02 |
 | **Config** | `../.env.example` | Variables runtime (copiar a `.env`) |
 
-## Estado por módulo
+## Progresión del código (importante)
 
-| Módulo | Cambio |
-|--------|--------|
-| M01 | Config embebida en código (exploración) |
-| M02-01 | `os.environ`, `/ready`, `infra/.env` |
-| M02-02 | `Dockerfile` multistage + `Dockerfile.legacy` para comparar |
-| M03+ | Despliegue en kind (`infra/k8s/`) |
+El repo en `main` arranca en **estado M01**. Los cambios de cada lab los haces **tú** en `api.py` y `Dockerfile`.
+
+| Recurso | Rol |
+|---------|-----|
+| `infra/starters/` | Punto de partida por lab (`lab-prepare.sh`) |
+| `infra/solutions/` | Referencia al terminar (comparar, no copiar sin intentar) |
+| `scripts/lab-prepare.sh` | Restaura el estado inicial de un lab |
+| `scripts/lab-verify.sh` | Comprueba que completaste el lab |
+
+| Módulo | Tú implementas en el lab |
+|--------|--------------------------|
+| M01 | *(exploración)* — código ya en estado M01 |
+| M02-01 | `os.environ`, `/ready`, `.env` |
+| M02-02 | `Dockerfile` multistage |
+| M03+ | Manifiestos K8s (`infra/k8s/`) — usar `lab-prepare.sh m03-01` si vienes de un fork antiguo |
 
 ## Dockerfiles API
 
 | Fichero | Uso |
 |---------|-----|
-| `Dockerfile` | **Producción** — multistage, usuario `app` |
-| `Dockerfile.legacy` | Referencia M02-02 — monolítico para comparar tamaño |
+| `Dockerfile` | **Activo** — evoluciona con tus labs (M01: monolítico → M02-02: multistage) |
+| `Dockerfile.legacy` | Referencia fija M02-02 — monolítico para comparar tamaño |
 
 ## Arranque
 

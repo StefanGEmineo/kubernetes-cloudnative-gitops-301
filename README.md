@@ -12,6 +12,8 @@ Formación **100 % práctica**: adaptas una aplicación al modelo cloudnative, l
 
 Cada módulo tiene **teoría** en su README y **laboratorios** (`Mxx-NN`) donde practicas tú.
 
+> El código de la app demo **evoluciona contigo**: en `main` arranca en estado M01 y tú implementas los cambios de cada lab. Ver [docs/progresion-labs.md](docs/progresion-labs.md).
+
 ## Antes de empezar
 
 | Requisito | Detalle |

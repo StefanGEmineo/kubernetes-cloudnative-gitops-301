@@ -13,15 +13,29 @@ Construir y entender una imagen **multistage** más segura que el Dockerfile mon
 - M02-01 completado (API con config en variables de entorno).
 - Haber leído en el README la tabla *Anti-patrón vs buena práctica*.
 
+## Antes de empezar — restaurar punto de partida
+
+```bash
+./scripts/lab-prepare.sh m02-02
+```
+
+Deja `api.py` en estado M02-01 y `Dockerfile` **monolítico** (como al terminar M02-01). Si ya tenías multistage en el repo, este paso te devuelve al ejercicio.
+
+Comprueba:
+
+```bash
+grep -c 'AS builder' infra/app/api/Dockerfile || echo "sin multistage (correcto al empezar)"
+```
+
 ## En qué consiste
 
-No se trata solo de «hacer la imagen más pequeña». Compararás dos estrategias de build, verás **quién** ejecuta el proceso dentro del contenedor (root vs `app`) y por qué el **orden de las capas** acelera pipelines CI en M05.
+No se trata solo de «hacer la imagen más pequeña». Partirás del Dockerfile monolítico, **implementarás** la versión multistage, y **medirás** diferencias de tamaño, capas y usuario de ejecución.
 
 ## Mapa del ejercicio
 
 ```text
-Paso 1      Entender Dockerfile.legacy (baseline)
-Paso 2      Analizar Dockerfile multistage (builder + runtime)
+Paso 1      Entender Dockerfile.legacy (referencia fija)
+Paso 2      Implementar Dockerfile multistage en infra/app/api/Dockerfile
 Paso 3      Medir con image-size-compare.sh
 Paso 4–5    Verificar no-root y funcionalidad
 Paso 6      Caché: requirements.txt antes que api.py
@@ -61,44 +75,51 @@ CMD ["python", "api.py"]
 
 ---
 
-### 2 — Analizar el multistage
+### 2 — Implementar el multistage
 
-**Acción:** Abre `infra/app/api/Dockerfile` (el que usa Compose en producción del lab). Localiza dos bloques:
+**Acción:** Sustituye el contenido de `infra/app/api/Dockerfile` (ahora monolítico) por un build de **dos stages**:
 
 | Stage | Nombre | Qué hace |
 |-------|--------|----------|
 | 1 | `builder` | `pip install --prefix=/install` |
 | 2 | `runtime` | Copia `/install`, copia `api.py`, `USER app` |
 
-Fragmento clave:
+Patrón objetivo:
 
 ```dockerfile
 FROM python:3.12-slim AS builder
-# ... pip install --prefix=/install ...
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 FROM python:3.12-slim AS runtime
+RUN groupadd --gid 10001 app \
+    && useradd --uid 10001 --gid app --create-home --shell /usr/sbin/nologin app
+WORKDIR /app
 COPY --from=builder /install /usr/local
 COPY api.py .
 USER app
+EXPOSE 8081
+ENV PORT=8081
 CMD ["python", "api.py"]
 ```
 
-**Por qué:** Solo el stage **`runtime`** se publica como imagen final. El `builder` existe durante el build y se descarta — incluyendo basura que no necesitas en ejecución.
+**Por qué:** Solo el stage **`runtime`** se publica como imagen final. El `builder` existe durante el build y se descarta.
 
-**En profundidad — seguridad:** `USER app` (UID 10001) limita daño si alguien explota un bug en tu app. Políticas enterprise en Kubernetes, ECS o Azure suelen exigir **run as non-root**; lo defines ya en la imagen.
+> [!TIP]
+> Si te atascas, compara con `infra/solutions/Dockerfile.m02-02` **después** de intentarlo. No copies sin entender cada línea.
 
-> [!IMPORTANT]
-> **`Dockerfile.legacy` se conserva solo para comparar.** Compose y el resto del curso usan `Dockerfile` multistage.
-
-**Resultado esperado:** Puedes dibujar mentalmente la flecha builder → runtime y explicar qué **no** viaja a producción.
+**Resultado esperado:** `./scripts/lab-verify.sh m02-02` responde OK.
 
 ---
 
 ### 3 — Comparar tamaños y capas
 
-**Acción:**
+**Acción:** Tras implementar el multistage, reconstruye y mide:
 
 ```bash
+./scripts/lab-down.sh
+./scripts/lab-up.sh
 ./scripts/image-size-compare.sh
 ```
 
@@ -182,6 +203,18 @@ Cambio en requirements →  rebuild desde pip install   →  pip CACHE MISS
 > En CI (M05), combinar este orden con `--cache-from` en GitHub Actions reduce minutos de pipeline.
 
 **Resultado esperado:** Entiendes por qué `requirements.txt` va **antes** que el código fuente en Dockerfiles profesionales.
+
+---
+
+### 7 — Verificar tu trabajo
+
+**Acción:**
+
+```bash
+./scripts/lab-verify.sh m02-02
+```
+
+**Resultado esperado:** `OK: Dockerfile cumple los requisitos de M02-02`.
 
 ---
 

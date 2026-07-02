@@ -142,6 +142,16 @@ Beneficios habituales:
 | Imagen | Un stage, proceso root | Multistage, usuario no privilegiado |
 | Despliegue | Rebuild por cada entorno | Una imagen, N entornos con distinta config |
 
+## Cómo evoluciona el código en los labs
+
+El repositorio en `main` arranca en **estado M01** (config embebida). **Tú implementas** los cambios de M02 en `infra/app/api/`.
+
+| Recurso | Para qué |
+|---------|----------|
+| `./scripts/lab-prepare.sh m02-01` | Restaura `api.py` antes de M02-01 (si tu fork ya tenía cambios) |
+| `./scripts/lab-verify.sh m02-01` | Comprueba que externalizaste config y añadiste `/ready` |
+| `infra/solutions/` | Referencia al terminar — comparar, no copiar sin intentar |
+
 ## Antes de practicar
 
 Comprueba que tienes:

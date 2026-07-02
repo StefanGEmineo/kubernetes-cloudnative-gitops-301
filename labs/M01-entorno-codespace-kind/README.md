@@ -39,6 +39,8 @@ Los laboratorios usan scripts para **automatizar tareas repetitivas**, reducir e
 | **`lab-down.sh`** | `docker compose down` — para y elimina contenedores de la stack demo | Apagar el lab sin borrar imágenes; útil antes de rebuild limpio | Cuando quieras liberar recursos o reiniciar Compose |
 | **`health-check.sh`** | Comprueba Docker, clúster kind, kubectl/helm/kustomize y endpoints 8080/8081 | Diagnóstico rápido: «¿está todo listo?» con mensajes OK/AVISO | Tras `kind-up` o `lab-up`; cuando algo no responde |
 | **`image-size-compare.sh`** | Construye imagen legacy vs multistage y muestra tabla de tamaños | Comparación reproducible en M02-02 sin memorizar comandos `docker build` | M02-02 |
+| **`lab-prepare.sh`** | Restaura el punto de partida de un lab (`m02-01`, `m02-02`, `m03-01`) | Evita que el código ya venga «hecho» en forks antiguos o al repetir un lab | Antes de M02+ |
+| **`lab-verify.sh`** | Comprueba que completaste un lab (`m02-01`, `m02-02`) | Autocorrección sin mirar la solución completa | Al final de M02-01 / M02-02 |
 
 **Flujo habitual al empezar el curso:**
 

@@ -13,6 +13,22 @@ Externalizar la configuración de la API demo para que **una sola imagen** funci
 - M01 completado (`./scripts/lab-up.sh` responde OK).
 - Haber leído en el README: *Configuración vs código* y *Health vs Ready*.
 
+## Antes de empezar — restaurar punto de partida
+
+```bash
+./scripts/lab-prepare.sh m02-01
+./scripts/lab-up.sh
+```
+
+Esto deja `api.py` en **estado M01** (config embebida, sin `/ready`). Si tu fork ya tenía los cambios hechos, este paso evita que el lab no tenga sentido.
+
+Comprueba el punto de partida:
+
+```bash
+grep -n 'postgres://' infra/app/api/api.py    # debe aparecer la URL hardcodeada
+curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8081/ready   # debe ser 404
+```
+
 ## En qué consiste
 
 Recorrerás el camino de una app «acoplada al lab» a una app alineada con la [metodología 12-Factor](../../docs/12-factor-app.md): quitar secretos del código, inyectar config vía **variables de entorno** (en el lab usarás un fichero local como simulación) y exponer `/ready` para que cualquier orquestador sepa cuándo enviar tráfico.
@@ -173,6 +189,20 @@ curl -s http://127.0.0.1:8081/health | jq .service
 **En profundidad:** Observa que **no** recompilaste lógica Python distinta — solo reinjectaste entorno. Eso es lo que escalará a decenas de réplicas en K8s.
 
 **Resultado esperado:** Respuesta `"cloudnative-demo-api-dev"`. Restaura `SERVICE_NAME=cloudnative-demo-api` al cerrar el lab.
+
+---
+
+### 7 — Verificar tu trabajo
+
+**Acción:**
+
+```bash
+./scripts/lab-verify.sh m02-01
+```
+
+**Resultado esperado:** `OK: api.py cumple los requisitos de M02-01`.
+
+Si falla, revisa los pasos 2–3 antes de mirar `infra/solutions/api.m02-01.py`.
 
 ---
 
