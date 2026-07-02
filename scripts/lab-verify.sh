@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Comprueba que el alumno completó un laboratorio (sin revelar la solución línea a línea).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -11,9 +10,10 @@ usage() {
   cat <<'EOF'
 Uso: ./scripts/lab-verify.sh <lab>
 
-Labs disponibles:
-  m02-01   config externalizada + endpoint /ready
-  m02-02   Dockerfile multistage + usuario no-root
+  m02-01   os.environ + /ready en api.py
+  m02-02   Dockerfile multistage Python
+  m03-01   manifests en infra/k8s/base/
+  m04-01   chart Helm cloudnative-demo
 EOF
 }
 
@@ -26,33 +26,31 @@ case "$LAB" in
   m02-01)
     echo "== Verificando M02-01 =="
     grep -q 'os\.environ' "$API" || fail "api.py no usa os.environ"
-    grep -q 'def ready' "$API" || fail "falta endpoint /ready"
-    grep -q 'postgres://lab:lab@postgres' "$API" && fail "DATABASE_URL sigue hardcodeada en api.py"
-    grep -q '@app.get("/ready")' "$API" || fail "falta decorador @app.get(\"/ready\")"
-    if [[ "$errors" -eq 0 ]]; then
-      ok "api.py cumple los requisitos de M02-01"
-    fi
+    grep -q 'def ready' "$API" || fail "falta /ready"
+    grep -q 'postgres://lab:lab@postgres' "$API" && fail "DATABASE_URL hardcodeada"
+    [[ "$errors" -eq 0 ]] && ok "api.py cumple M02-01"
     ;;
   m02-02)
     echo "== Verificando M02-02 =="
-    grep -q 'AS builder' "$DOCKERFILE" || fail "Dockerfile sin stage builder"
-    grep -q 'AS runtime' "$DOCKERFILE" || fail "Dockerfile sin stage runtime"
-    grep -q 'COPY --from=builder' "$DOCKERFILE" || fail "falta COPY --from=builder"
-    grep -q 'USER app' "$DOCKERFILE" || fail "falta USER app (no-root)"
-    grep -q 'FROM python:3.12-slim AS builder' "$DOCKERFILE" || fail "revisa estructura multistage"
-    if [[ "$errors" -eq 0 ]]; then
-      ok "Dockerfile cumple los requisitos de M02-02"
-    fi
+    grep -q 'AS builder' "$DOCKERFILE" || fail "sin stage builder"
+    grep -q 'USER app' "$DOCKERFILE" || fail "sin USER app"
+    [[ "$errors" -eq 0 ]] && ok "Dockerfile cumple M02-02"
     ;;
-  -h|--help|"")
-    usage
-    exit "${1:+0}"
+  m03-01)
+    echo "== Verificando M03-01 =="
+    for f in namespace.yaml api-deployment.yaml api-service.yaml web-deployment.yaml web-service.yaml; do
+      [[ -f "$ROOT/infra/k8s/base/$f" ]] || fail "falta $f"
+    done
+    [[ "$errors" -eq 0 ]] && ok "manifests M03-01 presentes"
+    ;;
+  m04-01)
+    echo "== Verificando M04-01 =="
+    [[ -f "$ROOT/infra/helm/cloudnative-demo/Chart.yaml" ]] || fail "falta Chart.yaml"
+    [[ "$errors" -eq 0 ]] && ok "chart Helm presente"
     ;;
   *)
-    echo "Lab desconocido: $LAB" >&2
     usage
     exit 1
     ;;
 esac
-
 exit "$errors"

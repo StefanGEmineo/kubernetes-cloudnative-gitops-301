@@ -2,7 +2,9 @@
 
 [Siguiente página →](labs/M01-entorno-codespace-kind/README.md)
 
-Formación **100 % práctica**: adaptas una aplicación al modelo cloudnative, la despliegas en **Kubernetes** (clúster **kind** en Codespaces), automatizas con **CI/CD** y **GitOps**, y la monitorizas con **Prometheus**, **Grafana** y **ELK**.
+Formación **100 % práctica** con **Python (Flask)** y **nginx**: adaptas una aplicación al modelo cloudnative, la despliegas en **Kubernetes** (clúster **kind** en Codespaces), automatizas con **CI/CD** y **GitOps**, y la monitorizas con **Prometheus**, **Grafana** y **ELK**.
+
+> **Ramas del repo:** `main` = stack **Python/Flask** · `springboot` = stack **Spring Boot + Angular** (mismos labs, distinta implementación).
 
 ## Cómo funciona el curso
 

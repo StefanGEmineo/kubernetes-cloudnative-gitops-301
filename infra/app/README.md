@@ -1,44 +1,22 @@
-# Aplicación demo del curso
+# Aplicación demo — Flask + nginx (rama `main`)
 
-Stack mínima que evoluciona módulo a módulo:
+| Componente | Ruta | Tecnología |
+|------------|------|------------|
+| **API** | `api/` | Python 3, Flask, psycopg2, redis |
+| **Web** | `web/` | nginx estático |
+| **Compose** | `../docker-compose.yml` | M01–M02 local |
+| **Config** | `../.env.example` | `DATABASE_URL`, `REDIS_URL`, `PORT`, … |
 
-| Componente | Ruta | Rol |
-|------------|------|-----|
-| **API** | `api/` | Flask: `/health`, `/ready`, `/work`, `/slow`, `/fail` |
-| **Web** | `web/` | nginx estático en puerto 8080 |
-| **Compose** | `../docker-compose.yml` | Orquestación local M01–M02 |
-| **Config** | `../.env.example` | Variables runtime (copiar a `.env`) |
+> Stack **Spring Boot + Angular** en la rama `springboot`.
 
-## Progresión del código (importante)
+## Endpoints API
 
-El repo en `main` arranca en **estado M01**. Los cambios de cada lab los haces **tú** en `api.py` y `Dockerfile`.
+| Ruta | Uso |
+|------|-----|
+| `/health` | Liveness |
+| `/ready` | Readiness (M02+) |
+| `/work`, `/slow`, `/fail` | Labs carga y diagnóstico |
 
-| Recurso | Rol |
-|---------|-----|
-| `infra/starters/` | Punto de partida por lab (`lab-prepare.sh`) |
-| `infra/solutions/` | Referencia al terminar (comparar, no copiar sin intentar) |
-| `scripts/lab-prepare.sh` | Restaura el estado inicial de un lab |
-| `scripts/lab-verify.sh` | Comprueba que completaste el lab |
+## Progresión
 
-| Módulo | Tú implementas en el lab |
-|--------|--------------------------|
-| M01 | *(exploración)* — código ya en estado M01 |
-| M02-01 | `os.environ`, `/ready`, `.env` |
-| M02-02 | `Dockerfile` multistage |
-| M03+ | Manifiestos K8s (`infra/k8s/`) — usar `lab-prepare.sh m03-01` si vienes de un fork antiguo |
-
-## Dockerfiles API
-
-| Fichero | Uso |
-|---------|-----|
-| `Dockerfile` | **Activo** — evoluciona con tus labs (M01: monolítico → M02-02: multistage) |
-| `Dockerfile.legacy` | Referencia fija M02-02 — monolítico para comparar tamaño |
-
-## Arranque
-
-```bash
-cp infra/.env.example infra/.env   # si no existe
-./scripts/lab-up.sh
-curl -s http://127.0.0.1:8081/ready | jq .
-./scripts/image-size-compare.sh    # M02-02
-```
+Ver `docs/progresion-labs.md` — `main` arranca en M01; el alumno implementa M02 en `api.py` y `Dockerfile`.

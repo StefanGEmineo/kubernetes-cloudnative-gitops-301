@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# Restaura el estado inicial de un laboratorio (punto de partida del alumno).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LAB="${1:-}"
+
+API_PY="$ROOT/infra/app/api/api.py"
+API_DOCKERFILE="$ROOT/infra/app/api/Dockerfile"
+K8S_BASE="$ROOT/infra/k8s/base"
 
 usage() {
   cat <<'EOF'
@@ -11,37 +14,52 @@ Uso: ./scripts/lab-prepare.sh <lab>
 
 Labs disponibles:
   m02-01   api.py en estado M01 (config embebida, sin /ready)
-  m02-02   api M02-01 + Dockerfile monolítico (antes de multistage)
-  m03-01   estado completo post-M02 (para Kubernetes)
+  m02-02   api M02-01 + Dockerfile monolítico
+  m03-01   estado post-M02 + carpeta K8s vacía
+  m04-01   post-M03 + sin chart Helm del alumno
+  m08-01   post-M02 listo para observabilidad
 
-El repo en main arranca en estado M01. Ejecuta lab-prepare si repites un lab
-o tu fork ya tenía cambios aplicados.
+Rama main = stack Python (Flask). Rama springboot = Spring Boot + Angular.
 EOF
 }
 
 copy_file() {
-  local src="$1" dst="$2"
-  cp "$src" "$dst"
-  echo "  → $(realpath --relative-to="$ROOT" "$dst")"
+  cp "$1" "$2"
+  echo "  → $(realpath --relative-to="$ROOT" "$2")"
+}
+
+reset_k8s_base() {
+  rm -rf "$K8S_BASE"
+  mkdir -p "$K8S_BASE"
+  echo "  → infra/k8s/base/ (vacío)"
 }
 
 case "$LAB" in
   m02-01)
     echo "== Preparando M02-01 =="
-    copy_file "$ROOT/infra/starters/api.m01.py" "$ROOT/infra/app/api/api.py"
-    echo "OK: api.py restaurado a estado M01."
+    copy_file "$ROOT/infra/starters/api.m01.py" "$API_PY"
     ;;
   m02-02)
     echo "== Preparando M02-02 =="
-    copy_file "$ROOT/infra/solutions/api.m02-01.py" "$ROOT/infra/app/api/api.py"
-    copy_file "$ROOT/infra/starters/Dockerfile.m01" "$ROOT/infra/app/api/Dockerfile"
-    echo "OK: api M02-01 + Dockerfile monolítico. Implementa multistage en M02-02."
+    copy_file "$ROOT/infra/solutions/api.m02-01.py" "$API_PY"
+    copy_file "$ROOT/infra/starters/Dockerfile.m01" "$API_DOCKERFILE"
     ;;
   m03-01)
     echo "== Preparando M03-01 =="
-    copy_file "$ROOT/infra/solutions/api.m02-01.py" "$ROOT/infra/app/api/api.py"
-    copy_file "$ROOT/infra/solutions/Dockerfile.m02-02" "$ROOT/infra/app/api/Dockerfile"
-    echo "OK: estado post-M02 listo para Kubernetes."
+    copy_file "$ROOT/infra/solutions/api.m02-01.py" "$API_PY"
+    copy_file "$ROOT/infra/solutions/Dockerfile.m02-02" "$API_DOCKERFILE"
+    reset_k8s_base
+    ;;
+  m04-01)
+    echo "== Preparando M04-01 =="
+    copy_file "$ROOT/infra/solutions/api.m02-01.py" "$API_PY"
+    copy_file "$ROOT/infra/solutions/Dockerfile.m02-02" "$API_DOCKERFILE"
+    rm -rf "$ROOT/infra/helm/cloudnative-demo"
+    ;;
+  m08-01)
+    echo "== Preparando M08-01 =="
+    copy_file "$ROOT/infra/solutions/api.m02-01.py" "$API_PY"
+    copy_file "$ROOT/infra/solutions/Dockerfile.m02-02" "$API_DOCKERFILE"
     ;;
   -h|--help|"")
     usage
@@ -53,3 +71,4 @@ case "$LAB" in
     exit 1
     ;;
 esac
+echo "OK."

@@ -1,0 +1,24 @@
+namespace: cloudnative-lab
+
+api:
+  image: cloudnative-demo-api:local
+  replicas: 2
+  servicePort: 8081
+
+web:
+  image: cloudnative-demo-web:local
+  replicas: 1
+  servicePort: 8080
+  nodePort: 30080
+
+redis:
+  enabled: true
+
+postgres:
+  enabled: true
+  storage: 1Gi
+
+config:
+  redisUrl: redis://redis:6379/0
+  serviceName: cloudnative-demo-api
+  databaseUrl: postgres://lab:lab@postgres:5432/lab
